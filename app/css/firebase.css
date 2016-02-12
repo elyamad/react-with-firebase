@@ -1,0 +1,22 @@
+body {
+  padding-top: 80px;
+}
+.header {
+  height: 100px;
+  background-color: #FFFFEB;
+}
+.main {
+  padding: 80px 50px;
+}
+
+.logo {
+  background: url('../images/logo.png') -200px -20px no-repeat;
+    display: block;
+    text-decoration: none;
+    color: #292d33;
+    line-height: 40px;
+    height: 30px;
+    width: 145px;
+    text-indent: -3000px;
+    overflow: hidden;
+}
