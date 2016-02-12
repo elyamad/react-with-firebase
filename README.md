@@ -5,9 +5,8 @@ Clone the repository:
 
 ```sh
 git clone https://github.com/elyamad/react-with-firebase.git
-cd brocantelab
-npm install
-npm start
+cd react-with-firebase
+npm i; npm start
 Browse to http://localhost:8080
 ```
 
