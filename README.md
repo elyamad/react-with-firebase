@@ -4,7 +4,7 @@
 Clone the repository:
 
 ```sh
-git clone https://github.com/elyamad/brocantelab.git
+git clone https://github.com/elyamad/react-with-firebase.git
 cd brocantelab
 npm install
 npm start
