@@ -28,28 +28,56 @@ var UsersStore = Reflux.createStore({
   updateUsers(userDataObj){
     let endAt = 10;
 
-    // add posts to new array
+    // add users to new array
     let newUsers = [];
 
     userDataObj.forEach(userData => {
         let user = userData.val();
         user.id = userData.key();
         newUsers.unshift(user);
+
+        // increment id for next addition
+        this.autoIncrementId(user.id);
     });
 
-    // slice off extra post
+    // slice off extra user
     data.users = newUsers.slice(0, endAt);
 
     this.trigger(data);
   },
 
-  topWatchingUsers() {
+  stopWatchingUsers() {
       usersRef.off();
+  },
+
+  onRemoveUser(id){
+    data.users.map(function(user, index){
+      if(user.id === id)
+        delete data.users[index];
+    });
+    this.trigger(data);
+  },
+
+  onAddUser(user){
+      user.id = this.getAutoIncrementedId();
+      console.log("User name :", user.name, "User Id : ", user.id);
+  },
+
+  autoIncrementId(id){
+    this.id_auto_inc += (id >= this.id_auto_inc) ? 1 : 0;
+    return this.id_auto_inc;
+  },
+
+  getAutoIncrementedId(){
+      return this.id_auto_inc;
   },
 
   getDefaultData() {
       return data;
   }
 });
+
+// static id auto incremented
+UsersStore.id_auto_inc = 1;
 
 export default UsersStore;
