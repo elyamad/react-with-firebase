@@ -8,7 +8,7 @@ let baseRef = new Firebase(firebaseUrl);
 let usersRef = baseRef.child('users');
 
 let data = {
-    users: []
+    users: null
 };
 
 var UsersStore = Reflux.createStore({
@@ -27,8 +27,8 @@ var UsersStore = Reflux.createStore({
 
     userDataObj.forEach(userData => {
       let user = userData.val();
-      user.id = userData.key();
-      newUsers.unshift(user);
+      user.id = this.getAutoIncrementedId();
+      newUsers.push(user);
 
       // increment id for next addition
       this.autoIncrementId(user.id);
@@ -44,17 +44,26 @@ var UsersStore = Reflux.createStore({
   },
 
   onRemoveUser(id){
+    var newUsers = [];
     data.users.map(function(user, index){
       if(user.id === id){
         delete data.users[index];
+      }else{
+        newUsers.push(user);
       }
     });
+
+    data.users = newUsers.map(function(user, i){
+      user.id = i;
+      return newUsers[i];
+    });
+
     this.trigger(data);
   },
 
   onAddUser(user){
     user.id = this.getAutoIncrementedId();
-    data.users.unshift(user);
+    data.users.push(user);
     this.trigger(data);
 
     // auto increment user id
@@ -76,6 +85,6 @@ var UsersStore = Reflux.createStore({
 });
 
 // static auto incremented id
-UsersStore.id_auto_inc = 1;
+UsersStore.id_auto_inc = 0;
 
 export default UsersStore;

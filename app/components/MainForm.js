@@ -1,7 +1,7 @@
 import React from 'react';
 import Reflux from 'reflux';
 
-import { Table, ProgressBar } from 'react-bootstrap';
+import { Table, ProgressBar, Pagination } from 'react-bootstrap';
 import UserItem from './UserItem';
 
 // stores and Actions
@@ -9,7 +9,7 @@ import UsersStore from '../stores/UsersStore';
 import Actions from '../actions/Actions';
 
 // firebase
-import { firebaseUrl } from '../utils/constants';
+import { firebaseUrl, perPage } from '../utils/constants';
 import Firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 
@@ -27,7 +27,8 @@ var MainForm = React.createClass({
           users: UsersStore.getDefaultData(),
           newUser: {
             name: null
-          }
+          },
+          activePage: 1
       };
   },
 
@@ -51,16 +52,36 @@ var MainForm = React.createClass({
     this.setState({newUser : {name: name}});
   },
 
+  handleSelect(event, selectedEvent) {
+    this.setState({
+      activePage: selectedEvent.eventKey
+    });
+  },
+
   render() {
     var users = this.state.users.users;
-    if(users.length) {
+
+    if(users) {
       var _userItems = [];
+      var nbPage = parseInt(users.length / perPage);
+      nbPage += (users.length % perPage) > 0 ? 1 : 0;
+
+      var activePage = this.state.activePage;
+      var beginAt = (activePage - 1) * perPage ;
+      var endAt = activePage * perPage - 1;
 
       users.forEach(function (user, i) {
-        _userItems.push(<UserItem key={i} user={users[i]} />);
+        if (beginAt <= i && i <= endAt )
+          _userItems.push(<UserItem key={i} user={users[i]} />);
       });
 
+      if(nbPage < activePage) {
+        // inadvisable !! to review (setState in rendre)
+        this.setState({activePage: nbPage});
+      }
+
       return (
+        <div>
           <div className="panel panel-primary">
               <div className="panel-heading">
                 <h3 className="panel-title">Users</h3>
@@ -75,6 +96,19 @@ var MainForm = React.createClass({
                 </div>
               </div>
             </div>
+            <div className="text-center">
+              <Pagination
+                prev
+                next
+                ellipsis
+                boundaryLinks
+                items={nbPage}
+                maxButtons={2}
+                activePage={this.state.activePage}
+                onSelect={this.handleSelect}>
+              </Pagination>
+            </div>
+          </div>
         );
     }else{
       return (<ProgressBar active now={100} label="Loading ... "/>)
