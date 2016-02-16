@@ -15,5 +15,5 @@ License
 
 The ISC
 
-Copyright (c) 2016, Adil El-yamouni
+Copyright (c) 2016, Adil EL-YAMOUNI
 All rights reserved.
