@@ -6,6 +6,8 @@ var UserItem = React.createClass({
     Actions.removeUser(this.props.user.id);
   },
 
+
+
   render() {
     var user = this.props.user;
     return (

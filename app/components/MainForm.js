@@ -24,7 +24,10 @@ var MainForm = React.createClass({
 
   getInitialState() {
       return {
-          users: UsersStore.getDefaultData()
+          users: UsersStore.getDefaultData(),
+          newUser: {
+            name: null
+          }
       };
   },
 
@@ -36,9 +39,16 @@ var MainForm = React.createClass({
     Actions.watchUsers();
   },
 
-  addUser() {
-    console.log(this.state.name);
-    Actions.addUser(this.state.name);
+  addUser(e) {
+    e.preventDefault();
+    Actions.addUser(this.state.newUser);
+
+    this.setState({newUser: {name: ''}});
+  },
+
+  onInput(e){
+    var name = e.target.value;
+    this.setState({newUser : {name: name}});
   },
 
   render() {
@@ -59,7 +69,7 @@ var MainForm = React.createClass({
                 {_userItems}
                 <div className="list-group-item">
                   <form id="user-form" name="user-form" className="list-group-item" onSubmit={this.addUser}>
-                    <input className="form-control" type="text" id="name" name="name" value={this.state.name} onChange={this.onInput} placeholder="Enter a name and press enter" />
+                    <input className="form-control" type="text" id="name" name="name" value={this.state.newUser.name} onChange={this.onInput} placeholder="Enter a name and press enter" />
                     <input type="submit" className="hidden"/>
                   </form>
                 </div>

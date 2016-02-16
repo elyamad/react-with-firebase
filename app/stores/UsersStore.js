@@ -20,9 +20,9 @@ var UsersStore = Reflux.createStore({
 
   watchUsers: function() {
     usersRef
-        .orderByKey()
-        .limitToLast(10)
-        .on('value', this.updateUsers);
+    .orderByKey()
+    .limitToLast(10)
+    .on('value', this.updateUsers);
   },
 
   updateUsers(userDataObj){
@@ -32,12 +32,12 @@ var UsersStore = Reflux.createStore({
     let newUsers = [];
 
     userDataObj.forEach(userData => {
-        let user = userData.val();
-        user.id = userData.key();
-        newUsers.unshift(user);
+      let user = userData.val();
+      user.id = userData.key();
+      newUsers.unshift(user);
 
-        // increment id for next addition
-        this.autoIncrementId(user.id);
+      // increment id for next addition
+      this.autoIncrementId(user.id);
     });
 
     // slice off extra user
@@ -47,20 +47,25 @@ var UsersStore = Reflux.createStore({
   },
 
   stopWatchingUsers() {
-      usersRef.off();
+    usersRef.off();
   },
 
   onRemoveUser(id){
     data.users.map(function(user, index){
-      if(user.id === id)
+      if(user.id === id){
         delete data.users[index];
+      }
     });
     this.trigger(data);
   },
 
   onAddUser(user){
-      user.id = this.getAutoIncrementedId();
-      console.log("User name :", user.name, "User Id : ", user.id);
+    user.id = this.getAutoIncrementedId();
+    data.users.unshift(user);
+    this.trigger(data);
+
+    // auto increment user id
+    this.autoIncrementId(user.id);
   },
 
   autoIncrementId(id){
@@ -69,11 +74,11 @@ var UsersStore = Reflux.createStore({
   },
 
   getAutoIncrementedId(){
-      return this.id_auto_inc;
+    return this.id_auto_inc;
   },
 
   getDefaultData() {
-      return data;
+    return data;
   }
 });
 
