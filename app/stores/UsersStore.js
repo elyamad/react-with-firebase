@@ -15,19 +15,13 @@ var UsersStore = Reflux.createStore({
 
   listenables: Actions,
 
-  init() {
-  },
-
   watchUsers: function() {
     usersRef
     .orderByKey()
-    .limitToLast(10)
     .on('value', this.updateUsers);
   },
 
   updateUsers(userDataObj){
-    let endAt = 10;
-
     // add users to new array
     let newUsers = [];
 
@@ -40,8 +34,7 @@ var UsersStore = Reflux.createStore({
       this.autoIncrementId(user.id);
     });
 
-    // slice off extra user
-    data.users = newUsers.slice(0, endAt);
+    data.users = newUsers
 
     this.trigger(data);
   },
@@ -82,7 +75,7 @@ var UsersStore = Reflux.createStore({
   }
 });
 
-// static id auto incremented
+// static auto incremented id
 UsersStore.id_auto_inc = 1;
 
 export default UsersStore;
